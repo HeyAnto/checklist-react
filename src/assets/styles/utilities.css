@@ -52,6 +52,9 @@
 .t-grey-3 {
   color: var(--color-grey-3);
 }
+.t-red {
+  color: var(--color-red);
+}
 
 /* Section */
 .app-max-width {

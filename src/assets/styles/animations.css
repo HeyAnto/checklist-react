@@ -110,6 +110,10 @@
   animation: fadeInUp 0.3s ease-out;
 }
 
+.btn-delete {
+  animation: fadeInUp 0.3s ease-out;
+}
+
 .empty-state {
   animation: fadeInUp 0.5s ease-out;
 }
@@ -175,6 +179,10 @@ h1 {
   transition: all 0.2s ease;
 }
 
+.btn-delete {
+  transition: all 0.2s ease;
+}
+
 .btn-task {
   transition: all 0.2s ease;
 }
@@ -221,6 +229,10 @@ h1 {
 }
 
 .btn-add:hover {
+  transform: translateY(-2px);
+}
+
+.btn-delete:hover {
   transform: translateY(-2px);
 }
 

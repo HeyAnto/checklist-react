@@ -94,6 +94,22 @@
   background-color: rgba(0, 0, 0, 0.02);
 }
 
+.btn-delete {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: "BDO Grotesk", sans-serif;
+  font-size: 1.25rem;
+  color: var(--color-red);
+  border: 2px dashed var(--color-red);
+}
+
+.btn-delete:hover {
+  background-color: var(--color-red-2);
+}
+
 .btn-task {
   width: 34px;
   height: 34px;
