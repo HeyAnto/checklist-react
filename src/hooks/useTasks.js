@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react";
-
-// Limite de caractères
-const MAX_CHARACTERS = 80;
+import { useCallback, useEffect, useState } from "react";
+import { MAX_CHARACTERS } from "../constants";
 
 function useTasks() {
   const [tasks, setTasks] = useState(() => {
-    // Chargement localStorage
+    // Charger localStorage
     const savedTasks = localStorage.getItem("checklist-tasks");
     if (savedTasks) {
       try {
@@ -14,7 +12,7 @@ function useTasks() {
         console.error("Erreur lors du chargement des tâches:", error);
       }
     }
-    // Tâches par défaut
+    // Tâches défaut
     return [
       {
         id: 1,
@@ -38,7 +36,7 @@ function useTasks() {
   });
 
   const [userCreatedTasks, setUserCreatedTasks] = useState(() => {
-    // Charger la liste des tâches créées par l'utilisateur
+    // Charger tâches utilisateur
     const savedUserTasks = localStorage.getItem("checklist-user-tasks");
     if (savedUserTasks) {
       try {
@@ -53,10 +51,10 @@ function useTasks() {
     return [];
   });
 
-  // Historique pour l'annulation
+  // Historique annulation
   const [history, setHistory] = useState([]);
 
-  // Sauvegarder l'état actuel avant une action
+  // Sauvegarder état
   const saveToHistory = (action, data) => {
     setHistory((prev) => [
       {
@@ -66,11 +64,11 @@ function useTasks() {
         userCreatedTasks: [...userCreatedTasks],
         timestamp: Date.now(),
       },
-      ...prev.slice(0, 9), // Garder seulement les 10 dernières actions
+      ...prev.slice(0, 9), // 10 dernières actions
     ]);
   };
 
-  // Sauvegarde automatique
+  // Sauvegarde auto
   useEffect(() => {
     localStorage.setItem("checklist-tasks", JSON.stringify(tasks));
     localStorage.setItem(
@@ -80,10 +78,10 @@ function useTasks() {
   }, [tasks, userCreatedTasks]);
 
   const addTask = (text) => {
-    // Sauvegarder l'état avant l'action
+    // Sauvegarder état
     saveToHistory("ADD_TASK", null);
 
-    // Limiter le texte
+    // Limiter texte
     const limitedText = text.slice(0, MAX_CHARACTERS);
     const newTask = {
       id: Date.now(), // ID unique
@@ -91,24 +89,24 @@ function useTasks() {
       completed: false,
     };
     setTasks((prevTasks) => [newTask, ...prevTasks]);
-    // Ajouter à la liste des tâches créées par l'utilisateur
+    // Ajouter tâches utilisateur
     setUserCreatedTasks((prev) => [newTask.id, ...prev]);
-    return newTask.id; // Retourne ID
+    return newTask.id; // Retourner ID
   };
 
   const deleteTask = (id) => {
-    // Sauvegarder l'état avant l'action
+    // Sauvegarder état
     const taskToDelete = tasks.find((task) => task.id === id);
     saveToHistory("DELETE_TASK", taskToDelete);
 
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-    // Retirer de la liste des tâches utilisateur
+    // Retirer tâches utilisateur
     setUserCreatedTasks((prev) => prev.filter((taskId) => taskId !== id));
   };
 
   const deleteLastUserTask = () => {
     if (userCreatedTasks.length > 0) {
-      const lastUserTaskId = userCreatedTasks[0]; // Le premier dans la liste = le plus récent
+      const lastUserTaskId = userCreatedTasks[0]; // Plus récent
       deleteTask(lastUserTaskId);
       return true;
     }
@@ -116,7 +114,7 @@ function useTasks() {
   };
 
   const deleteAllTasks = () => {
-    // Sauvegarder l'état avant l'action
+    // Sauvegarder état
     saveToHistory("DELETE_ALL", null);
 
     setTasks([]);
@@ -124,7 +122,7 @@ function useTasks() {
   };
 
   const toggleTaskComplete = (id) => {
-    // Sauvegarder l'état avant l'action
+    // Sauvegarder état
     const taskToToggle = tasks.find((task) => task.id === id);
     saveToHistory("TOGGLE_COMPLETE", {
       id,
@@ -139,7 +137,7 @@ function useTasks() {
   };
 
   const editTask = (id, newText) => {
-    // Sauvegarder l'état avant l'action
+    // Sauvegarder état
     const taskToEdit = tasks.find((task) => task.id === id);
     saveToHistory("EDIT_TASK", { id, previousText: taskToEdit?.text });
 
@@ -164,34 +162,43 @@ function useTasks() {
     setTasks(previousTasks);
     setUserCreatedTasks(previousUserTasks);
 
-    // Retirer cette action de l'historique
+    // Retirer de l'historique
     setHistory((prev) => prev.slice(1));
 
     return true;
   };
 
-  const getFilteredTasks = (filter, searchTerm = "") => {
-    let filteredTasks = tasks;
+  const getFilteredTasks = useCallback(
+    (filter, searchTerm = "") => {
+      let filteredTasks = tasks;
 
-    // Filtre par statut
-    if (filter === "pending") {
-      filteredTasks = tasks.filter((task) => !task.completed);
-    } else if (filter === "completed") {
-      filteredTasks = tasks.filter((task) => task.completed);
-    }
+      // Filtre par statut
+      if (filter === "pending") {
+        filteredTasks = tasks.filter((task) => !task.completed);
+      } else if (filter === "completed") {
+        filteredTasks = tasks.filter((task) => task.completed);
+      }
 
-    // Filtre par recherche
-    if (searchTerm) {
-      filteredTasks = filteredTasks.filter((task) =>
-        task.text.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
+      // Filtre par recherche
+      if (searchTerm) {
+        filteredTasks = filteredTasks.filter((task) =>
+          task.text.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
 
-    return filteredTasks;
-  };
+      return filteredTasks;
+    },
+    [tasks]
+  );
 
-  const getPendingTasks = () => tasks.filter((task) => !task.completed);
-  const getCompletedTasks = () => tasks.filter((task) => task.completed);
+  const getPendingTasks = useCallback(
+    () => tasks.filter((task) => !task.completed),
+    [tasks]
+  );
+  const getCompletedTasks = useCallback(
+    () => tasks.filter((task) => task.completed),
+    [tasks]
+  );
 
   // Réorganiser tâches
   const reorderTasks = (fromIndex, toIndex) => {

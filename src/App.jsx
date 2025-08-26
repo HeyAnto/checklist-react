@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
-import "./assets/styles/index.css";
+import { useCallback, useState } from "react";
 import {
   AddTaskButton,
   DeleteTaskButton,
   Header,
   TaskList,
 } from "./components";
+import useKeyboardShortcuts from "./hooks/useKeyboardShortcuts";
 import useTasks from "./hooks/useTasks";
 
 function App() {
@@ -13,7 +13,6 @@ function App() {
     tasks,
     addTask,
     deleteTask,
-    deleteLastUserTask,
     deleteAllTasks,
     undoLastAction,
     toggleTaskComplete,
@@ -50,62 +49,24 @@ function App() {
   );
 
   const handleTaskEditStart = (taskId) => {
-    // Reset ID édition
+    // Réinitialiser ID édition
     if (newlyCreatedTaskId === taskId) {
       setNewlyCreatedTaskId(null);
     }
   };
 
   const handleDragEnd = () => {
-    // Reset drag state if needed
+    // Réinitialiser l'état de drag
   };
 
   // Raccourcis clavier
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      // Ctrl + Alt + N
-      if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "n") {
-        e.preventDefault();
-        if (currentFilter !== "pending") {
-          setCurrentFilter("pending");
-        }
-        handleAddTask("Nouvelle tâche");
-      }
-      // Ctrl + Alt + Z
-      if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "z") {
-        e.preventDefault();
-        undoLastAction();
-      }
-      // Ctrl + Alt + P
-      if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "c") {
-        e.preventDefault();
-        setCurrentFilter("pending");
-      }
-      // Ctrl + Alt + F
-      if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "f") {
-        e.preventDefault();
-        setCurrentFilter("completed");
-      }
-      // Ctrl + Alt + R
-      if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "r") {
-        e.preventDefault();
-        deleteAllTasks();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [
+  useKeyboardShortcuts({
     currentFilter,
+    setCurrentFilter,
     handleAddTask,
-    tasks,
-    deleteTask,
-    deleteLastUserTask,
-    deleteAllTasks,
     undoLastAction,
-  ]);
+    deleteAllTasks,
+  });
 
   return (
     <>

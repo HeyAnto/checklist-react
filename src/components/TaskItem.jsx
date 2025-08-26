@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import iconCheck from "../assets/icons/icon-check.svg";
 import iconCross from "../assets/icons/icon-cross.svg";
-
-// Limite de caractères
-const MAX_CHARACTERS = 80;
+import { MAX_CHARACTERS } from "../constants";
 
 function TaskItem({
   task,

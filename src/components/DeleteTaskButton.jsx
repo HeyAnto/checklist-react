@@ -26,11 +26,11 @@ function DeleteTaskButton({ onDeleteAllCompleted, onDeleteTask, onDragEnd }) {
     const taskId = e.dataTransfer.getData("text/plain");
 
     if (taskId && onDeleteTask) {
-      // Convertir en nombre car dataTransfer renvoie toujours une chaîne
+      // Convertir en nombre
       onDeleteTask(Number(taskId));
     }
 
-    // Notifier la fin du drag
+    // Fin du drag
     if (onDragEnd) {
       onDragEnd();
     }

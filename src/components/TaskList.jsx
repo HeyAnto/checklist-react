@@ -19,7 +19,7 @@ function TaskList({
   // Drag désactivé
   const isDragDisabled = searchTerm.trim() !== "" || editingTaskId !== null;
 
-  // Réinitialiser draggedIndex quand la liste des tâches change
+  // Réinitialiser draggedIndex
   useEffect(() => {
     setDraggedIndex(null);
   }, [tasks.length]);
@@ -40,7 +40,6 @@ function TaskList({
     const taskId = tasks[index].id;
     e.dataTransfer.setData("text/plain", taskId);
 
-    // Écouter dragend sur le document pour nettoyer l'état
     const handleGlobalDragEnd = () => {
       setDraggedIndex(null);
       document.removeEventListener("dragend", handleGlobalDragEnd);
@@ -58,7 +57,6 @@ function TaskList({
     if (isDragDisabled) return;
     e.preventDefault();
     if (draggedIndex !== null && draggedIndex !== dropIndex) {
-      // Indices globaux
       const draggedTask = tasks[draggedIndex];
       const targetTask = tasks[dropIndex];
       const draggedTaskIndex = allTasks.findIndex(
