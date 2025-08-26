@@ -20,6 +20,8 @@ L'application offre des fonctionnalités avancées :
 - **Persistance des données** : Sauvegarde automatique en localStorage
 - **Design moderne** : Interface épurée avec animations fluides
 
+Démo : [https://heyanto.github.io/checklist-react/](https://heyanto.github.io/checklist-react/)
+
 ## 🛠️ Technologies utilisées
 
 ### Frontend
@@ -103,7 +105,7 @@ yarn dev
 #### 4. Accès à l'application
 
 - Ouvrez votre navigateur
-- Accédez à `http://localhost:5173`
+- Accédez à `http://localhost:5173` ou [https://heyanto.github.io/checklist-react/](https://heyanto.github.io/checklist-react/)
 - L'application se recharge automatiquement lors des modifications
 
 ## 📱 Guide d'utilisation
@@ -141,12 +143,6 @@ yarn dev
 
 - Cliquez sur l'icône "?" pour accéder au menu d'aide
 - Documentation complète des raccourcis et fonctionnalités
-
-### Cas d'usage suggérés
-
-1. **Gestion quotidienne** : Créez vos tâches du jour et cochez-les au fur et à mesure
-2. **Projets** : Organisez les étapes d'un projet par ordre de priorité
-3. **To-do lists** : Créez des listes thématiques et filtrez selon vos besoins
 
 ## 🚧 Difficultés rencontrées et solutions adoptées
 
