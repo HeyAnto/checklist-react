@@ -1,2 +1,2 @@
-// Constantes de l'application
+// Constantes
 export const MAX_CHARACTERS = 80;
