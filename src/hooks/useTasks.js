@@ -20,24 +20,41 @@ function useTasks() {
         id: 1,
         text: "Créer ça première tâche",
         completed: false,
+        isDefault: true,
       },
       {
         id: 2,
         text: "Éditer la tâche en cliquant sur le texte",
         completed: false,
+        isDefault: true,
       },
       {
         id: 3,
         text: "Sauver le monde... et finir le projet",
         completed: true,
+        isDefault: true,
       },
     ];
+  });
+
+  const [userCreatedTasks, setUserCreatedTasks] = useState(() => {
+    // Charger la liste des tâches créées par l'utilisateur
+    const savedUserTasks = localStorage.getItem("checklist-user-tasks");
+    if (savedUserTasks) {
+      try {
+        return JSON.parse(savedUserTasks);
+      } catch (error) {
+        console.error("Erreur lors du chargement des tâches utilisateur:", error);
+      }
+    }
+    return [];
   });
 
   // Sauvegarde automatique
   useEffect(() => {
     localStorage.setItem("checklist-tasks", JSON.stringify(tasks));
-  }, [tasks]);
+    localStorage.setItem("checklist-user-tasks", JSON.stringify(userCreatedTasks));
+  }, [tasks, userCreatedTasks]);
 
   const addTask = (text) => {
     // Limiter le texte
@@ -48,11 +65,24 @@ function useTasks() {
       completed: false,
     };
     setTasks((prevTasks) => [newTask, ...prevTasks]);
+    // Ajouter à la liste des tâches créées par l'utilisateur
+    setUserCreatedTasks((prev) => [newTask.id, ...prev]);
     return newTask.id; // Retourne ID
   };
 
   const deleteTask = (id) => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+    // Retirer de la liste des tâches utilisateur
+    setUserCreatedTasks((prev) => prev.filter((taskId) => taskId !== id));
+  };
+
+  const deleteLastUserTask = () => {
+    if (userCreatedTasks.length > 0) {
+      const lastUserTaskId = userCreatedTasks[0]; // Le premier dans la liste = le plus récent
+      deleteTask(lastUserTaskId);
+      return true;
+    }
+    return false;
   };
 
   const toggleTaskComplete = (id) => {
@@ -110,6 +140,7 @@ function useTasks() {
     tasks,
     addTask,
     deleteTask,
+    deleteLastUserTask,
     toggleTaskComplete,
     editTask,
     getFilteredTasks,

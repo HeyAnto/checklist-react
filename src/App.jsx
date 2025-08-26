@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import "./assets/styles/index.css";
-import { AddTaskButton, Header, TaskList } from "./components";
+import {
+  AddTaskButton,
+  DeleteTaskButton,
+  Header,
+  TaskList,
+} from "./components";
 import useTasks from "./hooks/useTasks";
 
 function App() {
@@ -8,6 +13,7 @@ function App() {
     tasks,
     addTask,
     deleteTask,
+    deleteLastUserTask,
     toggleTaskComplete,
     editTask,
     getFilteredTasks,
@@ -23,6 +29,11 @@ function App() {
   const pendingTasks = getPendingTasks();
   const completedTasks = getCompletedTasks();
   const filteredTasks = getFilteredTasks(currentFilter, searchTerm);
+
+  // Supprimer toutes les tâches terminées
+  const handleDeleteCompleted = useCallback(() => {
+    completedTasks.forEach((task) => deleteTask(task.id));
+  }, [completedTasks, deleteTask]);
 
   const handleAddTask = useCallback(
     (text) => {
@@ -43,16 +54,41 @@ function App() {
     }
   };
 
+  const handleDragEnd = () => {
+    // Reset drag state if needed
+  };
+
   // Raccourcis clavier
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Ctrl + Alt + N : Nouvelle tâche
-      if (e.ctrlKey && e.altKey && e.key === "n") {
+      // Ctrl + Alt + N
+      if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "n") {
         e.preventDefault();
         if (currentFilter !== "pending") {
           setCurrentFilter("pending");
         }
         handleAddTask("Nouvelle tâche");
+      }
+      // Ctrl + Alt + Z
+      if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "z") {
+        e.preventDefault();
+        // Tenter de supprimer la dernière tâche créée par l'utilisateur
+        const deleted = deleteLastUserTask();
+        // Si aucune tâche utilisateur, supprimer la dernière tâche globalement
+        if (!deleted && tasks.length > 0) {
+          const lastTask = tasks[tasks.length - 1];
+          deleteTask(lastTask.id);
+        }
+      }
+      // Ctrl + Alt + P
+      if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "c") {
+        e.preventDefault();
+        setCurrentFilter("pending");
+      }
+      // Ctrl + Alt + F
+      if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "f") {
+        e.preventDefault();
+        setCurrentFilter("completed");
       }
     };
 
@@ -60,7 +96,7 @@ function App() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [currentFilter, handleAddTask]);
+  }, [currentFilter, handleAddTask, tasks, deleteTask, deleteLastUserTask]);
 
   return (
     <>
@@ -77,6 +113,13 @@ function App() {
         {currentFilter === "pending" && (
           <AddTaskButton onAddTask={handleAddTask} />
         )}
+        {currentFilter === "completed" && (
+          <DeleteTaskButton
+            onDeleteAllCompleted={handleDeleteCompleted}
+            onDeleteTask={deleteTask}
+            onDragEnd={handleDragEnd}
+          />
+        )}
         <TaskList
           tasks={filteredTasks}
           allTasks={tasks}
@@ -87,6 +130,7 @@ function App() {
           onTaskEditStart={handleTaskEditStart}
           onReorderTasks={reorderTasks}
           searchTerm={searchTerm}
+          onDragEnd={handleDragEnd}
         />
       </section>
     </>

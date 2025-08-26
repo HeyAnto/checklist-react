@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskItem from "./TaskItem";
 
 function TaskList({
@@ -11,12 +11,18 @@ function TaskList({
   onTaskEditStart,
   onReorderTasks,
   searchTerm,
+  onDragEnd,
 }) {
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [editingTaskId, setEditingTaskId] = useState(null);
 
-  // Désactiver drag si recherche active ou édition en cours
+  // Drag désactivé
   const isDragDisabled = searchTerm.trim() !== "" || editingTaskId !== null;
+
+  // Réinitialiser draggedIndex quand la liste des tâches change
+  useEffect(() => {
+    setDraggedIndex(null);
+  }, [tasks.length]);
 
   const handleTaskEditStart = (taskId) => {
     setEditingTaskId(taskId);
@@ -31,6 +37,15 @@ function TaskList({
     if (isDragDisabled) return;
     setDraggedIndex(index);
     e.dataTransfer.effectAllowed = "move";
+    const taskId = tasks[index].id;
+    e.dataTransfer.setData("text/plain", taskId);
+
+    // Écouter dragend sur le document pour nettoyer l'état
+    const handleGlobalDragEnd = () => {
+      setDraggedIndex(null);
+      document.removeEventListener("dragend", handleGlobalDragEnd);
+    };
+    document.addEventListener("dragend", handleGlobalDragEnd);
   };
 
   const handleDragOver = (e) => {
@@ -43,7 +58,7 @@ function TaskList({
     if (isDragDisabled) return;
     e.preventDefault();
     if (draggedIndex !== null && draggedIndex !== dropIndex) {
-      // Trouver les indices dans la liste complète
+      // Indices globaux
       const draggedTask = tasks[draggedIndex];
       const targetTask = tasks[dropIndex];
       const draggedTaskIndex = allTasks.findIndex(
@@ -60,6 +75,9 @@ function TaskList({
 
   const handleDragEnd = () => {
     setDraggedIndex(null);
+    if (onDragEnd) {
+      onDragEnd();
+    }
   };
 
   if (tasks.length === 0) {

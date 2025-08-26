@@ -76,6 +76,18 @@ function Header({
                     <span className="help-key">Ctrl + Alt + N</span>
                     <span>Nouvelle tâche</span>
                   </div>
+                  <div className="help-item">
+                    <span className="help-key">Ctrl + Alt + Z</span>
+                    <span>Annuler</span>
+                  </div>
+                  <div className="help-item">
+                    <span className="help-key">Ctrl + Alt + C</span>
+                    <span>En cours</span>
+                  </div>
+                  <div className="help-item">
+                    <span className="help-key">Ctrl + Alt + F</span>
+                    <span>Terminé</span>
+                  </div>
                 </div>
               </div>
             </div>
