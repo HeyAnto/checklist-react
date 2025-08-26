@@ -16,6 +16,7 @@ function TaskItem({
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(task.text);
+  const [shake, setShake] = useState(false);
   const textareaRef = useRef(null);
 
   // Compteur de caractères
@@ -74,7 +75,12 @@ function TaskItem({
   };
 
   const handleSaveEdit = () => {
-    if (editText.trim() && editText.trim() !== task.text && !isOverLimit) {
+    if (isOverLimit) {
+      setShake(false);
+      setTimeout(() => setShake(true), 10); // Rejoue l'animation
+      return;
+    }
+    if (editText.trim() && editText.trim() !== task.text) {
       onEdit(task.id, editText.trim());
     }
     setIsEditing(false);
@@ -94,7 +100,12 @@ function TaskItem({
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      handleSaveEdit();
+      if (!isOverLimit) {
+        handleSaveEdit();
+      } else {
+        setShake(false);
+        setTimeout(() => setShake(true), 10);
+      }
     } else if (e.key === "Escape") {
       handleCancelEdit();
     }
@@ -131,7 +142,11 @@ function TaskItem({
               whiteSpace: "pre-wrap",
             }}
           />
-          <div className={`char-counter ${isOverLimit ? "over-limit" : ""}`}>
+          <div
+            className={`char-counter ${isOverLimit ? "over-limit" : ""} ${
+              shake ? "shake" : ""
+            }`}
+          >
             {remainingChars < 20 ? remainingChars : ""}
           </div>
         </div>
