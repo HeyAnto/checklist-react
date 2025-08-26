@@ -14,6 +14,8 @@ function App() {
     addTask,
     deleteTask,
     deleteLastUserTask,
+    deleteAllTasks,
+    undoLastAction,
     toggleTaskComplete,
     editTask,
     getFilteredTasks,
@@ -72,13 +74,7 @@ function App() {
       // Ctrl + Alt + Z
       if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "z") {
         e.preventDefault();
-        // Tenter de supprimer la dernière tâche créée par l'utilisateur
-        const deleted = deleteLastUserTask();
-        // Si aucune tâche utilisateur, supprimer la dernière tâche globalement
-        if (!deleted && tasks.length > 0) {
-          const lastTask = tasks[tasks.length - 1];
-          deleteTask(lastTask.id);
-        }
+        undoLastAction();
       }
       // Ctrl + Alt + P
       if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "c") {
@@ -90,13 +86,26 @@ function App() {
         e.preventDefault();
         setCurrentFilter("completed");
       }
+      // Ctrl + Alt + R
+      if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "r") {
+        e.preventDefault();
+        deleteAllTasks();
+      }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [currentFilter, handleAddTask, tasks, deleteTask, deleteLastUserTask]);
+  }, [
+    currentFilter,
+    handleAddTask,
+    tasks,
+    deleteTask,
+    deleteLastUserTask,
+    deleteAllTasks,
+    undoLastAction,
+  ]);
 
   return (
     <>

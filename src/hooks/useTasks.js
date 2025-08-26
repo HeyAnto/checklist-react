@@ -44,19 +44,45 @@ function useTasks() {
       try {
         return JSON.parse(savedUserTasks);
       } catch (error) {
-        console.error("Erreur lors du chargement des tâches utilisateur:", error);
+        console.error(
+          "Erreur lors du chargement des tâches utilisateur:",
+          error
+        );
       }
     }
     return [];
   });
 
+  // Historique pour l'annulation
+  const [history, setHistory] = useState([]);
+
+  // Sauvegarder l'état actuel avant une action
+  const saveToHistory = (action, data) => {
+    setHistory((prev) => [
+      {
+        action,
+        data,
+        tasks: [...tasks],
+        userCreatedTasks: [...userCreatedTasks],
+        timestamp: Date.now(),
+      },
+      ...prev.slice(0, 9), // Garder seulement les 10 dernières actions
+    ]);
+  };
+
   // Sauvegarde automatique
   useEffect(() => {
     localStorage.setItem("checklist-tasks", JSON.stringify(tasks));
-    localStorage.setItem("checklist-user-tasks", JSON.stringify(userCreatedTasks));
+    localStorage.setItem(
+      "checklist-user-tasks",
+      JSON.stringify(userCreatedTasks)
+    );
   }, [tasks, userCreatedTasks]);
 
   const addTask = (text) => {
+    // Sauvegarder l'état avant l'action
+    saveToHistory("ADD_TASK", null);
+
     // Limiter le texte
     const limitedText = text.slice(0, MAX_CHARACTERS);
     const newTask = {
@@ -71,6 +97,10 @@ function useTasks() {
   };
 
   const deleteTask = (id) => {
+    // Sauvegarder l'état avant l'action
+    const taskToDelete = tasks.find((task) => task.id === id);
+    saveToHistory("DELETE_TASK", taskToDelete);
+
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
     // Retirer de la liste des tâches utilisateur
     setUserCreatedTasks((prev) => prev.filter((taskId) => taskId !== id));
@@ -85,7 +115,22 @@ function useTasks() {
     return false;
   };
 
+  const deleteAllTasks = () => {
+    // Sauvegarder l'état avant l'action
+    saveToHistory("DELETE_ALL", null);
+
+    setTasks([]);
+    setUserCreatedTasks([]);
+  };
+
   const toggleTaskComplete = (id) => {
+    // Sauvegarder l'état avant l'action
+    const taskToToggle = tasks.find((task) => task.id === id);
+    saveToHistory("TOGGLE_COMPLETE", {
+      id,
+      previousCompleted: taskToToggle?.completed,
+    });
+
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.id === id ? { ...task, completed: !task.completed } : task
@@ -94,6 +139,10 @@ function useTasks() {
   };
 
   const editTask = (id, newText) => {
+    // Sauvegarder l'état avant l'action
+    const taskToEdit = tasks.find((task) => task.id === id);
+    saveToHistory("EDIT_TASK", { id, previousText: taskToEdit?.text });
+
     // Limiter le texte
     const limitedText = newText.slice(0, MAX_CHARACTERS);
     setTasks((prevTasks) =>
@@ -101,6 +150,24 @@ function useTasks() {
         task.id === id ? { ...task, text: limitedText } : task
       )
     );
+  };
+
+  // Fonction d'annulation
+  const undoLastAction = () => {
+    if (history.length === 0) return false;
+
+    const lastAction = history[0];
+    const { tasks: previousTasks, userCreatedTasks: previousUserTasks } =
+      lastAction;
+
+    // Restaurer l'état précédent
+    setTasks(previousTasks);
+    setUserCreatedTasks(previousUserTasks);
+
+    // Retirer cette action de l'historique
+    setHistory((prev) => prev.slice(1));
+
+    return true;
   };
 
   const getFilteredTasks = (filter, searchTerm = "") => {
@@ -141,6 +208,8 @@ function useTasks() {
     addTask,
     deleteTask,
     deleteLastUserTask,
+    deleteAllTasks,
+    undoLastAction,
     toggleTaskComplete,
     editTask,
     getFilteredTasks,

@@ -81,12 +81,16 @@ function Header({
                     <span>Annuler</span>
                   </div>
                   <div className="help-item">
-                    <span className="help-key">Ctrl + Alt + C</span>
-                    <span>En cours</span>
+                    <span className="help-key">Ctrl + Alt + P</span>
+                    <span>Filtrer : En cours</span>
                   </div>
                   <div className="help-item">
                     <span className="help-key">Ctrl + Alt + F</span>
-                    <span>Terminé</span>
+                    <span>Filtrer : Terminé</span>
+                  </div>
+                  <div className="help-item">
+                    <span className="help-key">Ctrl + Alt + R</span>
+                    <span>Reset</span>
                   </div>
                 </div>
               </div>
