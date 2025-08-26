@@ -1,0 +1,33 @@
+/* Tablet */
+@media (max-width: 768px) {
+  main {
+    padding: 20px !important;
+  }
+
+  .search-container {
+    gap: 0px !important;
+  }
+
+  .btn-help {
+    display: none;
+  }
+
+  .btn-action {
+    width: 100%;
+  }
+}
+
+/* Mobile */
+@media (max-width: 425px) {
+  .action-container {
+    flex-direction: column;
+  }
+
+  .task-item {
+    flex-direction: column;
+  }
+
+  .task-text {
+    font-size: 1.25rem;
+  }
+}
