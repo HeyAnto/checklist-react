@@ -1,0 +1,74 @@
+/* Flexbox */
+.flex {
+  display: flex;
+}
+.flex-row {
+  flex-direction: row;
+}
+.flex-column {
+  flex-direction: column;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+/* Justify Content */
+.justify-start {
+  justify-content: flex-start;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+
+/* Align Items */
+.items-start {
+  align-items: flex-start;
+}
+.items-center {
+  align-items: center;
+}
+.items-end {
+  align-items: flex-end;
+}
+
+/* Text Align */
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+
+/* Text Color */
+.t-grey-3 {
+  color: var(--color-grey-3);
+}
+
+/* Section */
+.app-max-width {
+  width: 100%;
+  max-width: 700px;
+}
+
+/* Gap */
+.gap-4 {
+  gap: 0.25rem;
+}
+.gap-10 {
+  gap: 0.625rem;
+}
+.gap-20 {
+  gap: 1.25rem;
+}
+.gap-50 {
+  gap: 3.125rem;
+}
