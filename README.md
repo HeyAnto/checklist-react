@@ -13,8 +13,9 @@ L'application offre des fonctionnalités avancées :
 - **Filtrage intelligent** : Affichage des tâches en cours, terminées ou toutes
 - **Recherche en temps réel** : Filtrage par mots-clés
 - **Drag & Drop** : Réorganisation des tâches par glisser-déposer
+- **Système Undo/Redo** : Annulation et rétablissement des actions
 - **Limite de caractères** : Contrôle de la longueur des tâches (80 caractères max)
-- **Raccourcis clavier** : Navigation rapide (Ctrl+Alt+N pour nouvelle tâche)
+- **Raccourcis clavier** : Navigation rapide et actions complètes
 - **Menu d'aide** : Documentation des fonctionnalités intégrée
 - **Persistance des données** : Sauvegarde automatique en localStorage
 - **Design moderne** : Interface épurée avec animations fluides
@@ -39,8 +40,9 @@ L'application offre des fonctionnalités avancées :
 ### Fonctionnalités techniques
 
 - **Hooks React** : useState, useEffect, useCallback, useRef
-- **Custom Hooks** : useTasks pour la logique métier
+- **Custom Hooks** : useTasks pour la logique métier, useKeyboardShortcuts pour les raccourcis
 - **localStorage API** : Persistance des données
+- **Système Undo/Redo** : Historique des actions avec gestion bidirectionnelle
 - **HTML5 Drag and Drop API** : Réorganisation des tâches
 - **Event Listeners** : Gestion des raccourcis clavier
 - **Responsive Design** : Adaptation mobile et desktop
@@ -123,12 +125,17 @@ yarn dev
 
 #### 3. Raccourcis clavier
 
-| Raccourci     | Action            |
-| ------------- | ----------------- |
-| `Ctrl+Alt+N`  | Nouvelle tâche    |
-| `Enter`       | Valider l'édition |
-| `Escape`      | Annuler l'édition |
-| `Double-clic` | Éditer une tâche  |
+| Raccourci     | Action                     |
+| ------------- | -------------------------- |
+| `Ctrl+Alt+N`  | Nouvelle tâche             |
+| `Ctrl+Alt+Z`  | Annuler la dernière action |
+| `Ctrl+Alt+Y`  | Rétablir l'action annulée  |
+| `Ctrl+Alt+P`  | Filtrer : En cours         |
+| `Ctrl+Alt+F`  | Filtrer : Terminé          |
+| `Ctrl+Alt+R`  | Reset (supprimer tout)     |
+| `Enter`       | Valider l'édition          |
+| `Escape`      | Annuler l'édition          |
+| `Double-clic` | Éditer une tâche           |
 
 #### 4. Menu d'aide
 
