@@ -53,6 +53,8 @@ function useTasks() {
 
   // Historique annulation
   const [history, setHistory] = useState([]);
+  // Historique rétablissement
+  const [redoHistory, setRedoHistory] = useState([]);
 
   // Sauvegarder état
   const saveToHistory = (action, data) => {
@@ -66,6 +68,8 @@ function useTasks() {
       },
       ...prev.slice(0, 9), // 10 dernières actions
     ]);
+    // Vider l'historique redo quand une nouvelle action est effectuée
+    setRedoHistory([]);
   };
 
   // Sauvegarde auto
@@ -158,12 +162,53 @@ function useTasks() {
     const { tasks: previousTasks, userCreatedTasks: previousUserTasks } =
       lastAction;
 
+    // Sauvegarder l'état actuel dans l'historique redo
+    setRedoHistory((prev) => [
+      {
+        action: lastAction.action,
+        data: lastAction.data,
+        tasks: [...tasks],
+        userCreatedTasks: [...userCreatedTasks],
+        timestamp: Date.now(),
+      },
+      ...prev.slice(0, 9), // 10 dernières actions
+    ]);
+
     // Restaurer l'état précédent
     setTasks(previousTasks);
     setUserCreatedTasks(previousUserTasks);
 
     // Retirer de l'historique
     setHistory((prev) => prev.slice(1));
+
+    return true;
+  };
+
+  // Fonction de rétablissement
+  const redoAction = () => {
+    if (redoHistory.length === 0) return false;
+
+    const actionToRedo = redoHistory[0];
+    const { tasks: redoTasks, userCreatedTasks: redoUserTasks } = actionToRedo;
+
+    // Sauvegarder l'état actuel dans l'historique normal
+    setHistory((prev) => [
+      {
+        action: actionToRedo.action,
+        data: actionToRedo.data,
+        tasks: [...tasks],
+        userCreatedTasks: [...userCreatedTasks],
+        timestamp: Date.now(),
+      },
+      ...prev.slice(0, 9),
+    ]);
+
+    // Restaurer l'état redo
+    setTasks(redoTasks);
+    setUserCreatedTasks(redoUserTasks);
+
+    // Retirer de l'historique redo
+    setRedoHistory((prev) => prev.slice(1));
 
     return true;
   };
@@ -217,6 +262,7 @@ function useTasks() {
     deleteLastUserTask,
     deleteAllTasks,
     undoLastAction,
+    redoAction,
     toggleTaskComplete,
     editTask,
     getFilteredTasks,

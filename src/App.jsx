@@ -15,6 +15,7 @@ function App() {
     deleteTask,
     deleteAllTasks,
     undoLastAction,
+    redoAction,
     toggleTaskComplete,
     editTask,
     getFilteredTasks,
@@ -65,6 +66,7 @@ function App() {
     setCurrentFilter,
     handleAddTask,
     undoLastAction,
+    redoAction,
     deleteAllTasks,
   });
 

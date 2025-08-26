@@ -81,6 +81,10 @@ function Header({
                     <span>Annuler</span>
                   </div>
                   <div className="help-item">
+                    <span className="help-key">Ctrl + Alt + Y</span>
+                    <span>Rétablir</span>
+                  </div>
+                  <div className="help-item">
                     <span className="help-key">Ctrl + Alt + P</span>
                     <span>Filtrer : En cours</span>
                   </div>

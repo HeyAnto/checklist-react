@@ -5,6 +5,7 @@ function useKeyboardShortcuts({
   setCurrentFilter,
   handleAddTask,
   undoLastAction,
+  redoAction,
   deleteAllTasks,
 }) {
   useEffect(() => {
@@ -25,6 +26,10 @@ function useKeyboardShortcuts({
         case "z":
           e.preventDefault();
           undoLastAction();
+          break;
+        case "y":
+          e.preventDefault();
+          redoAction();
           break;
         case "c":
           e.preventDefault();
@@ -52,6 +57,7 @@ function useKeyboardShortcuts({
     setCurrentFilter,
     handleAddTask,
     undoLastAction,
+    redoAction,
     deleteAllTasks,
   ]);
 }
