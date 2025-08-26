@@ -20,6 +20,8 @@
 
 /* Buttons */
 .btn-help {
+  width: 72px;
+  height: 72px;
   padding: 20px;
   background: var(--color-dark);
 }
@@ -107,7 +109,7 @@
 }
 
 .btn-delete:hover {
-  background-color: var(--color-red-2);
+  background-color: #f9c8c81a;
 }
 
 .btn-task {
