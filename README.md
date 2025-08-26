@@ -1,6 +1,6 @@
 <div align="center">
   <h1>Checklist React</h1>
-  <img src="public/note-list-exemple.png" alt="Exemple de l'application checklist style="width="500px">
+  <img src="public/note-list-exemple.png" alt="Exemple de l'application checklist">
 </div>
 
 ## 📋 Contexte du projet
