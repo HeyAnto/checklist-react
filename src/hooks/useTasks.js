@@ -68,7 +68,7 @@ function useTasks() {
       },
       ...prev.slice(0, 9), // 10 dernières actions
     ]);
-    // Vider l'historique redo quand une nouvelle action est effectuée
+    // Vider l'historique redo
     setRedoHistory([]);
   };
 
@@ -162,7 +162,7 @@ function useTasks() {
     const { tasks: previousTasks, userCreatedTasks: previousUserTasks } =
       lastAction;
 
-    // Sauvegarder l'état actuel dans l'historique redo
+    // Sauvegarder dans l'historique redo
     setRedoHistory((prev) => [
       {
         action: lastAction.action,
@@ -191,7 +191,7 @@ function useTasks() {
     const actionToRedo = redoHistory[0];
     const { tasks: redoTasks, userCreatedTasks: redoUserTasks } = actionToRedo;
 
-    // Sauvegarder l'état actuel dans l'historique normal
+    // Sauvegarder dans l'historique
     setHistory((prev) => [
       {
         action: actionToRedo.action,
